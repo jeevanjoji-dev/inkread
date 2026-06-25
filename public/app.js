@@ -4,8 +4,9 @@
 // ══════════════════════════════════════════════════════════
 // Gemini key lives only on the server now — see /api/gemini.js
 const GEMINI_PROXY_URL = '/api/gemini';
-const SBURL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SBKEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const GEMINI_PROXY_URL = '/api/gemini';
+const SBURL = 'https://skmnbwmezwbhivpmohkm.supabase.co'; 
+const SBKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrbW5id21lendiaGl2cG1vaGttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU1OTcsImV4cCI6MjA5Njk5MTU5N30.AilSPeFUa1AnhQfW4lTnjUnSaROn8ZM_K6bYMzAGIiM';
 const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 // ══════════════════════════════════════════════════════════
