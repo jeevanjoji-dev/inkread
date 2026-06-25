@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InkRead — AI Study Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="AUTH">
+<div class="aw">
+  <div class="alogo">
+    <div class="logo-mark" style="width:40px;height:40px;border-radius:12px;margin:0 auto 10px"><svg viewBox="0 0 24 24"><path d="M3 5h18v2H3zm0 4h12v2H3zm0 4h18v2H3zm0 4h12v2H3z"/></svg></div>
+    <div class="logo-text" style="font-size:22px">InkRead</div>
+    <div style="font-size:13px;color:var(--ink3);margin-top:4px">Your AI study companion</div>
+  </div>
+  <div class="acard" id="LOGIN">
+    <div class="atitle">Welcome back</div>
+    <div class="asub">Sign in to InkRead</div>
+    <div class="field"><label>Email</label><input class="inp" id="lEmail" type="email" placeholder="you@example.com"></div>
+    <div class="field"><label>Password</label><input class="inp" id="lPass" type="password" placeholder="••••••••"></div>
+    <div id="lErr" style="display:none;margin-bottom:10px"></div>
+    <button class="btn btn-ink btn-full" onclick="doLogin()">Sign in</button>
+    <div class="or-divider"><span>or continue with</span></div>
+    <div class="oauth-row">
+      <button class="btn-oauth" onclick="oauthLogin('google')"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Google</button>
+      <button class="btn-oauth" onclick="oauthLogin('github')"><svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-1.93c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.72-1.55-2.56-.29-5.25-1.28-5.25-5.71 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18.92-.26 1.91-.39 2.89-.39.98 0 1.97.13 2.89.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.8 1.19 1.83 1.19 3.09 0 4.44-2.7 5.42-5.27 5.7.42.36.78 1.07.78 2.17v3.22c0 .31.21.65.79.55C20.21 21.39 23.5 17.09 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>GitHub</button>
+    </div>
+    <div class="aswitch">No account? <a onclick="show('SIGNUP')">Create one free</a></div>
+    <div style="text-align:center;margin-top:10px"><a onclick="guest()" style="font-size:13px;color:var(--ink3);cursor:pointer">Skip — continue as guest</a></div>
+  </div>
+  <div class="acard" id="SIGNUP" style="display:none">
+    <div class="atitle">Join InkRead</div>
+    <div class="asub">Free — no credit card needed</div>
+    <div class="field"><label>Name</label><input class="inp" id="sName" placeholder="Arun Kumar"></div>
+    <div class="field"><label>Email</label><input class="inp" id="sEmail" type="email" placeholder="you@example.com"></div>
+    <div class="field"><label>Password</label><input class="inp" id="sPass" type="password" placeholder="min 8 characters"></div>
+    <div id="sErr" style="display:none;margin-bottom:10px"></div>
+    <button class="btn btn-ink btn-full" onclick="doSignup()">Create account</button>
+    <div class="or-divider"><span>or continue with</span></div>
+    <div class="oauth-row">
+      <button class="btn-oauth" onclick="oauthLogin('google')"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Google</button>
+      <button class="btn-oauth" onclick="oauthLogin('github')"><svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-1.93c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.72-1.55-2.56-.29-5.25-1.28-5.25-5.71 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18.92-.26 1.91-.39 2.89-.39.98 0 1.97.13 2.89.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.8 1.19 1.83 1.19 3.09 0 4.44-2.7 5.42-5.27 5.7.42.36.78 1.07.78 2.17v3.22c0 .31.21.65.79.55C20.21 21.39 23.5 17.09 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>GitHub</button>
+    </div>
+    <div class="aswitch">Have an account? <a onclick="show('LOGIN')">Sign in</a></div>
+    <div style="text-align:center;margin-top:10px"><a onclick="guest()" style="font-size:13px;color:var(--ink3);cursor:pointer">Skip — continue as guest</a></div>
+  </div>
+</div>
+</div>
+
+<!-- APP -->
+<div id="APP" style="display:none">
+<div id="nav">
+  <div class="logo">
+    <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M3 5h18v2H3zm0 4h12v2H3zm0 4h18v2H3zm0 4h12v2H3z"/></svg></div>
+    <div class="logo-text">InkRead</div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nt on" onclick="nav('scan',this)">Scan</button>
+    <button class="nt" onclick="nav('tutor',this)">AI Tutor</button>
+    <button class="nt" onclick="nav('exam',this)">Exam Prep</button>
+    <button class="nt" onclick="nav('stats',this)">Progress</button>
+    <button class="nt" onclick="nav('profile',this)">Profile</button>
+  </div>
+  <div class="nav-r">
+    <div class="avatar" id="AV">?</div>
+    <button class="btn btn-out btn-sm" onclick="doLogout()" id="LGB">Sign out</button>
+  </div>
+</div>
+
+<!-- SCAN -->
+<div class="page on" id="P-scan">
+  <h1 class="pg-title">Scan notes</h1>
+  <p class="pg-sub">Upload images, snap a photo, or add a PDF — InkRead reads everything.</p>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+    <button class="btn btn-ink" onclick="$('FIN').click()">📁 Upload files</button>
+    <button class="btn btn-b" onclick="$('CAM').click()">📷 Camera</button>
+    <input id="FIN" type="file" accept="image/*,application/pdf" multiple style="display:none" onchange="addFiles(this.files)">
+    <input id="CAM" type="file" accept="image/*" capture="environment" style="display:none" onchange="addFiles(this.files)">
+  </div>
+
+  <div id="DZ" class="upz"
+    ondragover="event.preventDefault();this.classList.add('drag')"
+    ondragleave="this.classList.remove('drag')"
+    ondrop="event.preventDefault();this.classList.remove('drag');addFiles(event.dataTransfer.files)"
+    onclick="if(!UPS.length)$('FIN').click()">
+    <div id="DZE">
+      <div class="upz-icon">📄</div>
+      <p style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px">Drop notes here</p>
+      <p style="font-size:13px;color:var(--ink3);margin-top:3px">Images or PDFs — multiple pages OK</p>
+    </div>
+    <div id="DZF" style="display:none" onclick="event.stopPropagation()">
+      <div class="tstrip" id="TSTRIP"></div>
+      <img id="PREV" class="prev-img" src="" style="display:none">
+      <div id="PDFINFO" style="display:none;padding:14px;text-align:center;background:var(--blue-s);border-radius:8px;color:var(--blue);font-size:14px"></div>
+    </div>
+  </div>
+
+  <div id="QW" style="display:none;margin-top:12px">
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:4px">
+      <span>Image quality</span><span id="QL" style="font-weight:500">Checking…</span>
+    </div>
+    <div class="qtrack"><div class="qfill" id="QF" style="width:0%"></div></div>
+  </div>
+  <div id="QERR" style="display:none" class="alert al-e"><span>⚠️</span><div>Quality too low. Move to better lighting, flatten the paper, and retake.</div></div>
+
+  <div id="SSC" style="display:none;margin-top:14px" class="card">
+    <div class="ch"><span class="ch-title">Whose handwriting?</span></div>
+    <div class="cb" style="padding:13px 15px">
+      <div class="chips" id="SCHIPS">
+        <div class="chip on" onclick="selStyle(this,'mine')">📝 My notes</div>
+        <div class="chip" onclick="selStyle(this,'other')">🔗 Someone else's</div>
+      </div>
+      <div id="OSROW" style="display:none;margin-top:10px;display:none;gap:8px">
+        <input class="inp" id="OSID" placeholder="Paste Style ID (e.g. INK-A42X)" style="flex:1">
+        <button class="btn btn-out btn-sm" onclick="verStyle()">Verify</button>
+      </div>
+      <div id="OSVINFO" style="display:none;margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div id="RBTNW" style="display:none;margin-top:12px">
+    <button class="btn btn-ink btn-full" id="RBTN" onclick="startRead()">Read this note</button>
+  </div>
+
+  <div id="SLOAD" style="display:none;margin-top:20px" class="lw">
+    <div class="spinner"></div>
+    <div class="lstep" id="SSTEP">Starting…</div>
+    <div class="pbar"><div class="pfill" id="SPFILL" style="width:0%"></div></div>
+  </div>
+
+  <div id="RESULT" style="display:none;margin-top:20px">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px;gap:6px">
+      <div style="display:flex;gap:3px;background:var(--bg2);padding:3px;border-radius:8px">
+        <button class="btn btn-sm" id="VSGL" style="background:var(--bg);box-shadow:0 1px 3px rgba(0,0,0,.07)" onclick="setView('s')">Single</button>
+        <button class="btn btn-sm" id="VSPL" onclick="setView('sp')">Side by side</button>
+      </div>
+    </div>
+
+    <div id="SVGL">
+      <div class="card" style="margin-bottom:14px">
+        <div class="ch">
+          <span class="ch-title">Extracted text <span id="CBDG" class="badge"></span></span>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn btn-out btn-sm" id="TTSBTN" onclick="toggleTTS()">🔊 Listen</button>
+            <button class="btn btn-out btn-sm" onclick="cpTxt()">Copy</button>
+          </div>
+        </div>
+        <div class="cb"><div class="rtxt" id="RTXT"></div></div>
+        <div class="tts-bar" id="TTSBAR" style="display:none">
+          <button class="btn btn-out btn-sm" id="TTSPAUSE" onclick="pauseTTS()">⏸ Pause</button>
+          <div class="tts-prog"><div class="tts-fill" id="TTSFILL"></div></div>
+          <button class="btn btn-out btn-sm" onclick="stopTTS()">■ Stop</button>
+        </div>
+        <div id="AIMSG" style="display:none;padding:10px 18px 14px;font-size:13px;color:var(--ink3);border-top:1px solid var(--bg2)"></div>
+        <div id="MPALT" style="display:none;padding:10px 15px;border-top:1px solid var(--bdr)"></div>
+        <div id="CORRW" style="display:none;background:var(--amber-s);border-top:1px solid #FDE68A;padding:13px 15px">
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--amber-t);margin-bottom:10px">Uncertain words — fix to improve AI</div>
+          <div id="CORRL"></div>
+          <button class="btn btn-a btn-sm" style="margin-top:8px" onclick="saveCorr()">Save corrections</button>
+        </div>
+        <div id="CORRSV" style="display:none;padding:11px 15px;background:var(--green-s);border-top:1px solid #A7F3D0;font-size:13px;color:var(--green-t);font-weight:500">✅ Corrections saved — AI remembers these</div>
+      </div>
+
+      <div class="card" id="DGCARD" style="display:none;margin-bottom:14px">
+        <div class="ch">
+          <span class="ch-title">📐 Diagram <span id="DGTBDG" class="badge bg-b"></span></span>
+          <div style="display:flex;gap:3px;background:var(--bg3);padding:3px;border-radius:8px">
+            <button class="btn btn-sm" id="DGSVG" style="background:var(--bg);box-shadow:0 1px 2px rgba(0,0,0,.07)" onclick="setDGTab('svg')">SVG</button>
+            <button class="btn btn-sm" id="DGDSC" onclick="setDGTab('desc')">Description</button>
+          </div>
+        </div>
+        <div class="cb" id="DGBODY"></div>
+      </div>
+
+      <div class="card" id="SUMCARD" style="display:none;margin-bottom:14px">
+        <div style="background:var(--violet);padding:12px 16px;display:flex;align-items:center;gap:8px">
+          <span style="font-size:16px">🎓</span>
+          <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:#fff;flex:1">Study Summary</span>
+          <span class="badge" style="background:rgba(255,255,255,.2);color:#fff">AI</span>
+        </div>
+        <div id="STLDR" style="display:none;padding:13px 17px;background:var(--violet-s);border-bottom:1px solid #E9D5FF;font-size:14px;color:var(--violet-t);font-weight:500;line-height:1.55"></div>
+        <div class="stabs">
+          <button class="stab on" onclick="setSTab('b',this)">📋 Notes</button>
+          <button class="stab" onclick="setSTab('t',this)">🔑 Terms</button>
+          <button class="stab" onclick="setSTab('c',this)">🃏 Flashcards</button>
+        </div>
+        <div class="sbody" id="STB"></div>
+        <div class="sbody" id="STT" style="display:none"></div>
+        <div class="sbody" id="STC" style="display:none"></div>
+      </div>
+
+      <div id="SUMBTNW">
+        <button class="btn btn-v btn-full" onclick="doSummarize()">🎓 Summarize for Study</button>
+      </div>
+      <div id="SUMLOAD" style="display:none" class="lw" style="padding:18px 0">
+        <div class="spinner" style="border-top-color:var(--violet)"></div>
+        <div class="lstep" style="color:var(--violet-t)">Building study summary…</div>
+      </div>
+
+      <div class="card" id="EXPCARD" style="display:none;margin-top:14px">
+        <div class="ch"><span class="ch-title">💾 Save note</span></div>
+        <div class="cb">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-r" onclick="expPDF()">📄 Save as PDF</button>
+            <button class="btn btn-b" onclick="expDOCX()">📝 Save as Word</button>
+          </div>
+          <p style="font-size:12px;color:var(--ink3);margin-top:8px" id="EXPNOTE">Includes extracted text</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="SVSP" style="display:none" class="split">
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:8px;color:var(--ink2)">📷 Original</div>
+        <img id="SPIMG" src="" style="width:100%;border-radius:12px;border:1px solid var(--bdr)">
+      </div>
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:8px;color:var(--ink2)">📝 Extracted</div>
+        <div class="card"><div class="cb" style="max-height:480px;overflow-y:auto"><div class="rtxt" id="SPTXT"></div></div></div>
+      </div>
+    </div>
+
+    <div id="SMPREQ" style="display:none;margin-top:14px;padding:18px;border:1.5px solid var(--amber);border-radius:14px;background:var(--amber-s)">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--amber-t);margin-bottom:6px">Add your handwriting sample</div>
+      <p style="font-size:13px;color:var(--amber-t);opacity:.85;margin-bottom:12px">Training on your style significantly improves future scan accuracy.</p>
+      <button class="btn btn-sm" style="background:var(--amber-t);color:#fff" onclick="nav('profile',document.querySelectorAll('.nt')[4])">Set up my style →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TUTOR -->
+<div class="page" id="P-tutor">
+  <h1 class="pg-title">AI Tutor</h1>
+  <p class="pg-sub">Ask anything about your scanned notes — explanations, examples, and answers.</p>
+  <div id="NONOTEW" class="alert al-w" style="margin-bottom:14px;display:none"><span>⚠️</span><div>Scan a note first — the tutor uses your actual notes.</div></div>
+  <div class="card chat-box" id="CHATBOX">
+    <div class="chat-msgs" id="CHATMSGS">
+      <div class="msg ma">👋 Hi! I'm your InkRead tutor. Scan a note and ask me anything about it — I'll explain concepts, give examples, or help you understand difficult parts.</div>
+    </div>
+    <div class="chat-in">
+      <input class="chat-inp" id="CHATIN" placeholder="Ask about your notes…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}">
+      <button class="btn btn-v" onclick="sendChat()">Send</button>
+    </div>
+  </div>
+  <div style="margin-top:12px">
+    <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:8px">Quick questions</div>
+    <div class="chips">
+      <div class="chip" onclick="qChat('Explain the main topic in simple words')">Explain simply</div>
+      <div class="chip" onclick="qChat('What are the most important points to remember?')">Key points</div>
+      <div class="chip" onclick="qChat('Give me a real-world example of the main concept')">Real example</div>
+      <div class="chip" onclick="qChat('What exam questions could come from these notes?')">Exam topics</div>
+      <div class="chip" onclick="qChat('Summarize this in 5 bullet points')">5-point summary</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXAM -->
+<div class="page" id="P-exam">
+  <h1 class="pg-title">Exam Prep</h1>
+  <p class="pg-sub">Generate MCQs, short answers, long answers, mock exams, and revision notes.</p>
+  <div id="NONOTEW2" class="alert al-w" style="margin-bottom:14px;display:none"><span>⚠️</span><div>Scan a note first to generate exam questions.</div></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+    <button class="btn btn-ink" onclick="genExam('mcq')">🎯 MCQ Quiz</button>
+    <button class="btn btn-v" onclick="genExam('short')">✏️ Short Answers</button>
+    <button class="btn btn-a" onclick="genExam('long')">📝 Long Answers</button>
+    <button class="btn btn-g" onclick="genExam('mock')">📋 Mock Exam</button>
+    <button class="btn btn-out" onclick="genExam('revision')">⚡ Quick Revision</button>
+  </div>
+  <div id="EXAMLOAD" style="display:none" class="lw">
+    <div class="spinner" style="border-top-color:var(--violet)"></div>
+    <div class="lstep">Generating questions from your notes…</div>
+  </div>
+  <div id="EXAMRES"></div>
+</div>
+
+<!-- STATS -->
+<div class="page" id="P-stats">
+  <h1 class="pg-title">Your progress</h1>
+  <p class="pg-sub">Track your learning journey.</p>
+  <div class="sgrid">
+    <div class="sbox"><div class="snum" id="AS1">0</div><div class="slbl">Notes scanned</div></div>
+    <div class="sbox"><div class="snum" id="AS2">0</div><div class="slbl">Corrections</div></div>
+    <div class="sbox"><div class="snum" id="AS3">—</div><div class="slbl">Avg accuracy</div></div>
+    <div class="sbox"><div class="snum" id="AS4">0</div><div class="slbl">Exams taken</div></div>
+    <div class="sbox"><div class="snum" id="AS5">0</div><div class="slbl">Flashcards</div></div>
+    <div class="sbox"><div class="snum" id="AS6">1🔥</div><div class="slbl">Day streak</div></div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="ch"><span class="ch-title">Recent scans</span></div>
+    <div class="cb" id="RSLIST"><p style="font-size:13px;color:var(--ink3)">No scans yet.</p></div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ch-title">Weak areas</span></div>
+    <div class="cb" id="WKLIST"><p style="font-size:13px;color:var(--ink3)">Take some exams to find weak areas.</p></div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="P-profile">
+  <h1 class="pg-title">My profile</h1>
+  <p class="pg-sub">Handwriting style, Style ID, and training.</p>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="ptop">
+      <div class="avatar" id="PAV" style="width:48px;height:48px;border-radius:12px;font-size:20px">?</div>
+      <div>
+        <div class="pname" id="PNAME">Set up profile</div>
+        <div class="pid" id="PSID">No Style ID yet</div>
+      </div>
+    </div>
+    <div class="cb">
+      <div class="sgrid" style="margin-bottom:14px">
+        <div class="sbox"><div class="snum" id="PP1">0</div><div class="slbl">Scans</div></div>
+        <div class="sbox"><div class="snum" id="PP2">0</div><div class="slbl">Corrections</div></div>
+        <div class="sbox"><div class="snum" id="PP3">—</div><div class="slbl">Accuracy</div></div>
+      </div>
+      <div class="field"><label>Your name</label>
+        <div style="display:flex;gap:8px">
+          <input class="inp" id="PNINP" placeholder="e.g. Arun K." style="flex:1">
+          <button class="btn btn-out btn-sm" onclick="savePName()">Save</button>
+        </div>
+      </div>
+      <div class="share-box">
+        <div>
+          <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Your Style ID</div>
+          <div class="share-id" id="SHSID">—</div>
+        </div>
+        <button class="btn btn-out btn-sm" id="CPSIDBTN" onclick="cpSID()" disabled>Copy</button>
+      </div>
+      <div class="alert al-i" style="margin-top:10px"><span>💡</span><div>Share your Style ID with classmates so they can read your handwriting accurately.</div></div>
+    </div>
+  </div>
+
+  <h2 style="font-size:16px;font-weight:800;margin-bottom:14px">Train your handwriting</h2>
+  <div class="step-r">
+    <div class="step-n" id="SN1">1</div>
+    <div class="step-c">
+      <div class="step-t">Upload a sample</div>
+      <div class="step-d">Write A–Z on paper at your normal speed and upload a photo.</div>
+      <div id="SAMPUPZ">
+        <div class="upz" style="padding:18px" onclick="$('SAMPIN').click()">
+          <input id="SAMPIN" type="file" accept="image/*" style="display:none" onchange="handleSample(this.files[0])">
+          <p style="font-size:13px;font-weight:500">Upload sample</p>
+          <p style="font-size:12px;color:var(--ink3);margin-top:3px">Any page with your natural writing</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="step-r">
+    <div class="step-n" id="SN2">2</div>
+    <div class="step-c">
+      <div class="step-t">Letter coverage</div>
+      <div class="step-d">Green = detected. Amber = needs more samples.</div>
+      <div class="ag" id="AGRID"></div>
+    </div>
+  </div>
+  <div class="step-r">
+    <div class="step-n" id="SN3">3</div>
+    <div class="step-c">
+      <div class="step-t">Drift reminders</div>
+      <div class="step-d">Get notified when your profile may be outdated.</div>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px">
+        <input type="checkbox" id="DRIFTCK" checked style="width:16px;height:16px;accent-color:var(--violet)">
+        Remind me to update my sample
+      </label>
+    </div>
+  </div>
+
+  <h2 style="font-size:16px;font-weight:800;margin:24px 0 12px">Saved style profiles</h2>
+  <div id="SVSTYLES"></div>
+  <div class="card" style="margin-top:10px">
+    <div class="cb">
+      <div style="font-size:14px;font-weight:500;margin-bottom:10px">Add from Style ID</div>
+      <div style="display:flex;gap:8px">
+        <input class="inp" id="ADDSTID" placeholder="Paste Style ID (e.g. INK-A42X)" style="flex:1">
+        <button class="btn btn-out btn-sm" onclick="addSStyle()">Add</button>
+      </div>
+      <div id="ADDSTMSG" style="display:none;margin-top:8px"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /APP -->
+
+<div id="toast"></div>
+
+<div id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
