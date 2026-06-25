@@ -4,8 +4,8 @@
 // ══════════════════════════════════════════════════════════
 // Gemini key lives only on the server now — see /api/gemini.js
 const GEMINI_PROXY_URL = '/api/gemini';
-const SBURL = 'https://lcgrkkmxnk0xh7b6maxziq.supabase.co'; // ⚠️ replace with YOUR Supabase Project URL
-const SBKEY = 'sb_publishable_lcgRkkMxnk0Xh7b6mAXZIQ_EE9-xyRP'; // ⚠️ replace with YOUR Supabase anon/publishable key
+const SBURL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SBKEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 // ══════════════════════════════════════════════════════════
